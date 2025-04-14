@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer un avis - Carint</title>
+    <link rel="stylesheet" href="delete_avis.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>Carint</h1>
+        </div>
+        <nav>
+            <ul>
+             
+              <li><a href="create_avis.html">create_avis</a></li>
+              <li><a href="read_avis.html">read_avis</a></li>
+              <li><a href="update_avis.html">upDate_avis</a></li>
+              <li><a href="delete_avis.html">delete_avis</a></li>
+              
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main>
+            <h2>🗑️ Supprimer un avis</h2>
+            <h3>❗ Entrer l’ID de l’avis à supprimer</h3>
+            <form id="deleteForm">
+                <input type="number" id="deleteId" placeholder="ID de l'avis" required>
+                <button type="submit">❌ Supprimer</button>
+            </form>
+
+            <p id="deleteMessage"></p>
+        </main>
+    </div>
+
+    <footer>
+        <p>Contact : <a href="mailto:demo@gmail.com">demo@gmail.com</a></p>
+        <p>Téléphone : +1 123 456 7890</p>
+    </footer>
+
+    <script>
+        document.getElementById('deleteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('deleteId').value;
+
+            if (!confirm(`Es-tu sûr de vouloir supprimer l'avis #${id} ?`)) {
+                return;
+            }
+
+            try {
+                const res = await fetch('http://localhost/projetcovoiturage/back-end/delete_avis.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                const result = await res.json();
+                document.getElementById('deleteMessage').textContent = result.message || result.error;
+                document.getElementById('deleteMessage').style.color = res.ok ? 'green' : 'red';
+            } catch (err) {
+                document.getElementById('deleteMessage').textContent = '❌ Erreur de connexion au serveur.';
+                document.getElementById('deleteMessage').style.color = 'red';
+            }
+        });
+    </script>
+
+</body>
+</html>

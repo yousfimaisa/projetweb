@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Liste des avis - Need For Ride</title>
+    <link rel="stylesheet" href="read_avis.css" />
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Need For Ride</h1>
+        </div>
+        <nav>
+            <ul>
+            
+              <li><a href="create_avis.html">create_avis</a></li>
+              <li><a href="read_avis.html">read_avis</a></li>
+              <li><a href="update_avis.html">upDate_avis</a></li>
+              <li><a href="delete_avis.html">delete_avis</a></li>
+            </ul>
+        </nav>
+    </header>
+
+        <main>
+            <h2>📋 Liste des avis</h2>
+            <div id="avisList"></div>
+        </main>
+
+    <footer>
+        <p>Contact : <a href="mailto:demo@gmail.com">demo@gmail.com</a></p>
+        <p>Téléphone : +1 123 456 7890</p>
+    </footer>
+
+    <script>
+        // Appel à l'API PHP pour récupérer les avis
+        fetch("http://localhost/projetcovoiturage/back-end/read_avis.php")
+            .then((response) => response.json())
+            .then((data) => {
+                const avisList = document.getElementById("avisList");
+                if (data.length === 0) {
+                    avisList.innerHTML = "<p>Aucun avis trouvé.</p>";
+                } else {
+                    data.forEach((avis) => {
+                        const div = document.createElement("div");
+                        div.classList.add("avis-item"); // Ajout de la classe pour le style
+                        div.innerHTML = `
+                            <p><strong>ID Utilisateur:</strong> ${avis.user_id}</p>
+                            <p><strong>Message:</strong> ${avis.message}</p>
+                            <p><strong>Note:</strong> ${avis.note} / 5</p>
+                            <p><strong>Date:</strong> ${avis.date_avis}</p>
+                        `;
+                        avisList.appendChild(div);
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("Erreur lors du chargement des avis :", error);
+                document.getElementById("avisList").innerHTML =
+                    "❌ Impossible de charger les avis.";
+            });
+    </script>
+</body>
+</html>

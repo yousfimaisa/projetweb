@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modifier un avis</title>
+    <link rel="stylesheet" href="create_avis.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <h1>Need For Ride</h1>
+    </div>
+    <nav>
+        <ul>
+          
+          <li><a href="create_avis.html">create_avis</a></li>
+          <li><a href="read_avis.html">read_avis</a></li>
+          <li><a href="update_avis.html">upDate_avis</a></li>
+          <li><a href="delete_avis.html">delete_avis</a></li>
+        </ul>
+    </nav>
+      <h1> <center>✏️ Modifier un avis </center></h1>
+    </header>
+
+    <div class="container">
+      <main>
+        <h2>🔄 Charger un avis à modifier</h2>
+        <form id="loadForm">
+          <input
+            type="number"
+            id="avisId"
+            placeholder="ID de l'avis à modifier"
+            required
+          />
+          <button type="submit">📥 Charger</button>
+        </form>
+
+        <div id="modificationFormContainer" style="display: none">
+          <h2>✍️ Modifier les informations</h2>
+          <form id="updateForm">
+            <textarea
+              id="updateMessage"
+              placeholder="Modifier le message"
+              required
+            ></textarea>
+            <input
+              type="number"
+              id="updateNote"
+              min="1"
+              max="5"
+              placeholder="Note sur 5"
+              required
+            />
+            <button type="submit">💾 Enregistrer les modifications</button>
+          </form>
+        </div>
+
+        <p id="resultMessage"></p>
+      </main>
+    </div>
+
+    <script>
+      // Charger les données existantes d’un avis
+      document
+        .getElementById("loadForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const avisId = document.getElementById("avisId").value;
+
+          try {
+            const res = await fetch(
+              `http://localhost/projetcovoiturage/back-end/get_avis_by_id.php?id=${avisId}`
+            );
+            const avis = await res.json();
+
+            if (res.ok) {
+              document.getElementById("updateMessage").value = avis.message;
+              document.getElementById("updateNote").value = avis.note;
+              document.getElementById(
+                "modificationFormContainer"
+              ).style.display = "block";
+            } else {
+              document.getElementById("resultMessage").textContent = avis.error;
+            }
+          } catch (error) {
+            document.getElementById("resultMessage").textContent =
+              "❌ Erreur de connexion";
+          }
+        });
+
+      // Envoyer les modifications
+      document
+        .getElementById("updateForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const id = document.getElementById("avisId").value;
+          const message = document.getElementById("updateMessage").value.trim();
+          const note = document.getElementById("updateNote").value;
+
+          try {
+            const res = await fetch(
+              "http://localhost/projetcovoiturage/back-end/update_avis.php",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, message, note }),
+              }
+            );
+
+            const result = await res.json();
+            document.getElementById("resultMessage").textContent =
+              result.message || result.error;
+          } catch {
+            document.getElementById("resultMessage").textContent =
+              "❌ Erreur de connexion";
+          }
+        });
+    </script>
+  </body>
+</html>

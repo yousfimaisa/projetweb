@@ -1,0 +1,109 @@
+/* create_avis.css */
+
+/* Réinitialisation de certains styles par défaut */
+body, h1, h2, p, ul {
+    margin: 0;
+    padding: 0;
+}
+
+/* Styles de base */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+
+/* En-tête */
+header {
+    background: #35424a;
+    color: #ffffff;
+    padding: 20px 0;
+}
+
+.logo h1 {
+    text-align: center;
+    margin: 0;
+}
+
+nav {
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles des titres */
+h2 {
+    color: #35424a;
+    margin-bottom: 10px;
+}
+
+/* Formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input[type="number"],
+form textarea {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form textarea {
+    resize: vertical; /* Permet de redimensionner la zone de texte verticalement */
+    min-height: 100px; /* Hauteur minimale pour la zone de texte */
+}
+
+form button {
+    padding: 10px;
+    background: #35424a;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Changement de couleur au survol du bouton */
+form button:hover {
+    background: #4a5a6b;
+}
+
+/* Message de retour */
+#messageResult {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* Pied de page */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background: #35424a;
+    color: #ffffff;
+    margin-top: 20px;
+}
