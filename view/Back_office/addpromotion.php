@@ -8,17 +8,12 @@ $errors = [];
 // Vérifier si le formulaire est soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupérer les données du formulaire
-    $user_id = $_POST['user_id'];
     $code = $_POST['code'];
     $date_debut = $_POST['date_debut'];
     $date_fin = $_POST['date_fin'];
     $valeur = $_POST['valeur'];
 
     // Validation côté serveur
-    if (strlen($user_id) != 4) {
-        $errors[] = "L'ID utilisateur doit avoir 4 caractères.";
-    }
-
     if (strlen($code) != 8) {
         $errors[] = "Le code promo doit avoir 8 caractères.";
     }
@@ -34,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Si pas d'erreurs, ajouter la promotion
     if (empty($errors)) {
         $promotionController = new PromotionController();
-        $promotionController->addPromotion($user_id, $code, $date_debut, $date_fin, $valeur);
+        $promotionController->addPromotion($code, $date_debut, $date_fin, $valeur);
         $success_message = "Promotion ajoutée avec succès.";
     }
 }
@@ -44,155 +39,179 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter une Promotion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #2980b9;
+            padding: 0.5rem 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+        }
+
+        nav ul li a:hover {
+            background-color: #1c638d;
+            border-radius: 3px;
         }
 
         .container {
-            width: 50%;
-            margin: 100px auto;
-            background-color: #fff;
+            width: 80%;
+            margin: 30px auto;
             padding: 30px;
+            background-color: white;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             text-align: center;
+            color: #2980b9;
             margin-bottom: 20px;
-            color: #333;
         }
 
         label {
             display: block;
-            margin: 10px 0 5px;
-            color: #333;
+            margin-top: 15px;
         }
 
         input[type="text"], input[type="date"], input[type="number"] {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
+            margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
         }
 
-        button[type="submit"] {
-            background-color: #4CAF50;
+        .btn {
+            background-color: #3498db;
             color: white;
-            padding: 15px 20px;
+            padding: 12px 20px;
             border: none;
-            cursor: pointer;
-            width: 100%;
+            text-decoration: none;
             font-size: 16px;
+            display: inline-block;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            margin-top: 20px;
+            cursor: pointer;
         }
 
-        button[type="submit"]:hover {
-            background-color: #45a049;
+        .btn:hover {
+            background-color: #2980b9;
         }
 
         .success-message {
-            text-align: center;
             color: green;
+            text-align: center;
             font-weight: bold;
+            margin-bottom: 20px;
         }
 
         .error-message {
-            text-align: center;
             color: red;
+            text-align: center;
             font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .back-btn {
-            display: block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #f44336;
+        footer {
+            background-color: #34495e;
             color: white;
             text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
+            padding: 1rem 0;
+            margin-top: 40px;
         }
-
-        .back-btn:hover {
-            background-color: #e53935;
-        }
-
-
-
-
-
-
-
-
-        
     </style>
 </head>
 <body>
 
+<header>
+    <h1>Need For Ride - Gestion des Promotions</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#">Promotions</a></li>
+        <li><a href="#">Trajets</a></li>
+        <li><a href="#">Avis</a></li>
+        <li><a href="#">Paiements</a></li>
+    </ul>
+</nav>
+
 <div class="container">
     <h2>Ajouter une Nouvelle Promotion</h2>
 
-    <?php
-    if (isset($success_message)) {
-        echo "<div class='success-message'>$success_message</div>";
-    }
-    
-    // Afficher les erreurs s'il y en a
-    if (!empty($errors)) {
-        foreach ($errors as $error) {
-            echo "<div class='error-message'>$error</div>";
-        }
-    }
-    ?>
+    <?php if (isset($success_message)): ?>
+        <div class="success-message"><?= $success_message ?></div>
+    <?php endif; ?>
 
-    <form action="" method="post" id="promotionForm">
-        <label for="user_id">ID Utilisateur (4 caractères):</label>
-        <input type="text" name="user_id" id="user_id" value="<?= isset($user_id) ? $user_id : '' ?>" required maxlength="4">
+    <?php foreach ($errors as $error): ?>
+        <div class="error-message"><?= $error ?></div>
+    <?php endforeach; ?>
 
+    <form method="post" id="promotionForm">
         <label for="code">Code Promo (8 caractères):</label>
-        <input type="text" name="code" id="code" value="<?= isset($code) ? $code : '' ?>" required maxlength="8">
+        <input type="text" name="code" id="code" maxlength="8" value="<?= htmlspecialchars($code ?? '') ?>" required>
 
         <label for="date_debut">Date de début:</label>
-        <input type="date" name="date_debut" id="date_debut" value="<?= isset($date_debut) ? $date_debut : '' ?>" required>
+        <input type="date" name="date_debut" id="date_debut" value="<?= htmlspecialchars($date_debut ?? '') ?>" required>
 
         <label for="date_fin">Date de fin:</label>
-        <input type="date" name="date_fin" id="date_fin" value="<?= isset($date_fin) ? $date_fin : '' ?>" required>
+        <input type="date" name="date_fin" id="date_fin" value="<?= htmlspecialchars($date_fin ?? '') ?>" required>
 
         <label for="valeur">Valeur de la promotion (inférieure à 100):</label>
-        <input type="number" name="valeur" id="valeur" value="<?= isset($valeur) ? $valeur : '' ?>" required max="99">
+        <input type="number" name="valeur" id="valeur" max="99" value="<?= htmlspecialchars($valeur ?? '') ?>" required>
 
-        <button type="submit">Ajouter Promotion</button>
+        <button type="submit" class="btn">Ajouter Promotion</button>
+        <a href="javascript:history.back()" class="btn" style="background-color:#e74c3c;">Retour</a>
     </form>
-
-    <!-- Bouton retour -->
-    <a href="javascript:history.back()" class="back-btn">Retour</a>
 </div>
+
+<footer>
+    &copy; 2025 Need For Ride. Tous droits réservés.
+</footer>
 
 <script>
     document.getElementById('promotionForm').addEventListener('submit', function(event) {
         let errors = [];
-        
-        // Récupérer les valeurs du formulaire
-        let user_id = document.getElementById('user_id').value;
-        let code = document.getElementById('code').value;
+
+        let code = document.getElementById('code').value.trim();
         let date_debut = document.getElementById('date_debut').value;
         let date_fin = document.getElementById('date_fin').value;
-        let valeur = document.getElementById('valeur').value;
-
-        // Validation des champs
-        if (user_id.length !== 4) {
-            errors.push("L'ID utilisateur doit avoir 4 caractères.");
-        }
+        let valeur = parseInt(document.getElementById('valeur').value);
 
         if (code.length !== 8) {
             errors.push("Le code promo doit avoir 8 caractères.");
@@ -202,11 +221,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             errors.push("La date de début doit être avant la date de fin.");
         }
 
-        if (valeur >= 100) {
+        if (valeur >= 100 || isNaN(valeur)) {
             errors.push("La valeur de la promotion doit être inférieure à 100.");
         }
 
-        // Si des erreurs existent, empêcher la soumission du formulaire
         if (errors.length > 0) {
             event.preventDefault();
             alert(errors.join('\n'));
