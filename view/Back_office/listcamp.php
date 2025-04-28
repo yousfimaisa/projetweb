@@ -176,6 +176,8 @@ if (empty($list)) {
             </div>
         </article>
     <?php } ?>
+    <a href="admin_dashboard.php" class="btn" style="background-color:#e74c3c;">Retour</a>
+
 </div>
 
 <footer>
