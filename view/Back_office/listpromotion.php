@@ -5,11 +5,14 @@ $promotionC = new PromotionController();
 
 // Suppression si un ID est passé dans l'URL
 $successMessage = '';
-if (isset($_GET['delete_id'])) {
-    $id = $_GET['delete_id'];
-    $promotionC->deletePromotion($id);
-    $successMessage = "Suppression effectuée avec succès.";
-}
+
+
+    if (isset($_GET['delete_code'])) {
+        $code_promotion = $_GET['delete_code'];
+        $promotionC->deletePromotion($code_promotion);
+        $successMessage = "Suppression effectuée avec succès.";
+    }
+    
 
 // Récupération de la liste mise à jour
 $list = $promotionC->listPromotion();
@@ -196,7 +199,7 @@ $list = $promotionC->listPromotion();
                 <td><?= htmlspecialchars($promotion['valeur']) ?></td>
                 <td>
                     <a href="updatepromotion.php?id=<?= $promotion['id'] ?>" class="btn">Modifier</a>
-                    <a href="listpromotion.php?delete_id=<?= $promotion['id'] ?>" class="btn-delete" onclick="return confirm('Supprimer cette promotion ?');">Supprimer</a>
+                    <a href="listpromotion.php?delete_code=<?= $promotion['code_promotion'] ?>" class="btn-delete" onclick="return confirm('Supprimer cette promotion ?');">Supprimer</a>
                 </td>
             </tr>
         <?php } ?>
