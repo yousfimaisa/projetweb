@@ -96,7 +96,6 @@ $stmt->bindParam(':description', $description);
 $stmt->bindParam(':cd_promotion', $cd_promotion);
 $stmt->bindParam(':statut', $statut);
 $stmt->execute();
-echo "Ajout de la campagne avec succès.";
 } catch (Exception $e) {
 throw new Exception('Erreur lors de l\'ajout de la campagne : ' . $e->getMessage());
 }
