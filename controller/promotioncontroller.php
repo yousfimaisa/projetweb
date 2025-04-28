@@ -31,17 +31,34 @@ class PromotionController {
         }
     }
 
-    public function deletePromotion($id) {
-        $sql = "DELETE FROM Promotions WHERE id = :id";
+    // PromotionController.php
+    public function deletePromotion($code_promotion) {
         $db = config::getConnexion();
+        $sqlDeletePromotion = "DELETE FROM promotions WHERE code_promotion = :code_promotion";
+    
         try {
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt = $db->prepare($sqlDeletePromotion);
+            $stmt->bindParam(':code_promotion', $code_promotion);
             $stmt->execute();
+    
+            // Vérifiez si une ligne a été affectée
+            if ($stmt->rowCount() > 0) {
+                echo "Suppression réussie!";
+            } else {
+                echo "Aucune promotion trouvée avec ce code.";
+            }
         } catch (Exception $e) {
-            throw new Exception('Erreur : ' . $e->getMessage());
+            echo "Erreur : " . $e->getMessage();
         }
     }
+    
+
+    
+    
+    
+    
+    
+    
 
     public function updatePromotion(Promotion $promotion) {
         $sql = "UPDATE promotions SET code_promotion = :code, date_debut = :date_debut, date_fin = :date_fin, valeur = :valeur WHERE id = :id";
