@@ -1,6 +1,3 @@
-<?php
-// index.php - Page d'accueil pour Need For Ride
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -10,7 +7,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #800000, #a83232);
+      background: linear-gradient(135deg, #2c3e50, #34495e);
       color: white;
       margin: 0;
       padding: 0;
@@ -20,11 +17,25 @@
       height: 100vh;
       flex-direction: column;
       text-align: center;
+      animation: fadeIn 2s ease-out;
+    }
+
+    /* Animation pour l'apparition du texte */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     h1 {
       font-size: 3em;
       margin-bottom: 20px;
+      animation: fadeIn 2s ease-out;
     }
 
     .btn {
@@ -38,12 +49,14 @@
       border-radius: 10px;
       cursor: pointer;
       text-decoration: none;
-      transition: 0.3s;
+      transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
     }
 
     .btn:hover {
       background-color: maroon;
       color: white;
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
     .btn-admin {
@@ -53,6 +66,10 @@
 
     .btn-admin:hover {
       background-color: #c7c7c7;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
     }
   </style>
 </head>
