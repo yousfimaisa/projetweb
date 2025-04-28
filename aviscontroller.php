@@ -1,130 +1,136 @@
 <?php
-require_once 'config.php'; // Incluez le fichier de configuration pour la connexion à la base de données
-require_once __DIR__ . '/../model/avis.php'; // Chemin correct
+require_once __DIR__ . '/../model/avis.php';
+require_once __DIR__ . '/../config.php';
 
 class AvisController {
-    public function addAvis($avis) {
-        $conn = config::getConnexion();
-        try {
-            $stmt = $conn->prepare("INSERT INTO avis (numero, id, message, note) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$avis->getNumero(), $avis->getId(), $avis->getMessage(), $avis->getNote()]);
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
+
+    // Méthode pour ajouter un avis
+    public function ajouterAvis($avis) {
+        if (!($avis instanceof Avis)) {
+            throw new Exception("❌ Objet invalide fourni à ajouterAvis.");
         }
-    }
-    public function ajoutavis($avis) {
-        $conn = config::getConnexion();
+
+        $message = $avis->getMessage();
+        $note = $avis->getNote();
+
         try {
-            $stmt = $conn->prepare("INSERT INTO avis (numero, id, message, note) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$avis->getNumero(), $avis->getId(), $avis->getMessage(), $avis->getNote()]);
+            $db = config::getConnexion();
+            $sql = "INSERT INTO avis (message, note, date_avis) VALUES (:message, :note, NOW())";
+            $req = $db->prepare($sql);
+            $req->bindValue(':message', htmlspecialchars($message), PDO::PARAM_STR);
+            $req->bindValue(':note', $note, PDO::PARAM_INT);
+            $req->execute();
+            return $db->lastInsertId();
         } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
+            throw new Exception("Erreur BDD lors de l'ajout de l'avis : " . $e->getMessage());
         }
     }
 
-    public function listAvis() {
-        $conn = config::getConnexion();
+    // Méthode pour mettre à jour un avis
+    public function updateAvis($avis) {
+        if (!($avis instanceof Avis)) {
+            throw new Exception("❌ Objet invalide fourni à updateAvis.");
+        }
+
+        $message = $avis->getMessage();
+        $note = $avis->getNote();
+
         try {
-            $stmt = $conn->query("SELECT * FROM avis");
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $db = config::getConnexion();
+            $sql = "UPDATE avis SET message = :message, note = :note WHERE id = :id";
+            $req = $db->prepare($sql);
+            $req->bindValue(':id', $avis->getId(), PDO::PARAM_INT);
+            $req->bindValue(':message', htmlspecialchars($message), PDO::PARAM_STR);
+            $req->bindValue(':note', $note, PDO::PARAM_INT);
+            $req->execute();
         } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
+            throw new Exception("Erreur BDD lors de la mise à jour de l'avis : " . $e->getMessage());
         }
     }
 
-    public function lireavis() {
-        $conn = config::getConnexion();
-        try {
-            $stmt = $conn->query("SELECT * FROM avis");
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
-    }
+    // Méthode pour récupérer un avis par ID
     public function getAvisById($id) {
-        $conn = config::getConnexion();
+        $id = (int) $id;
+        if ($id <= 0) {
+            throw new Exception("❌ L'ID de l'avis est invalide.");
+        }
+
         try {
-            $stmt = $conn->prepare("SELECT * FROM avis WHERE id = ?");
-            $stmt->execute([$id]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if (!$result) {
-                echo "Aucun résultat trouvé pour l'ID: " . htmlspecialchars($id);
-            }
-
-            return $result;
+            $db = config::getConnexion();
+            $sql = "SELECT * FROM avis WHERE id = :id";
+            $req = $db->prepare($sql);
+            $req->bindParam(':id', $id, PDO::PARAM_INT);
+            $req->execute();
+            return $req->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            die('Erreur : ' . $e->getMessage());
+            throw new Exception("Erreur BDD lors de la récupération de l'avis : " . $e->getMessage());
         }
     }
 
-    public function updateAvis($numero, $id, $messageContent, $note) {
-        $avis = $this->getAvisById($id); // Récupérer l'avis par ID
+    // Méthode pour récupérer tous les avis
+    public function listAvis() {
+        try {
+            $db = config::getConnexion();
+            $sql = "SELECT * FROM avis";
+            $req = $db->prepare($sql);
+            $req->execute();
+            return $req->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur BDD lors de la récupération des avis : " . $e->getMessage());
+        }
+    }
 
-        if ($avis) {
-            // Préparer la requête de mise à jour
-            $conn = config::getConnexion();
-            try {
-                $stmt = $conn->prepare("UPDATE avis SET message = ?, note = ? WHERE numero = ? AND id = ?");
-                $stmt->execute([$messageContent, $note, $numero, $id]);
-            } catch (PDOException $e) {
-                die('Erreur : ' . $e->getMessage());
+    // Méthode pour supprimer un avis par ID
+    public function deleteAvis($id) {
+        if (!is_numeric($id) || $id <= 0) {
+            throw new Exception("L'ID de l'avis est invalide.");
+        }
+
+        try {
+            $db = config::getConnexion();
+            $sql = "DELETE FROM avis WHERE id = :id";
+            $req = $db->prepare($sql);
+            $req->bindParam(':id', $id, PDO::PARAM_INT);
+            $req->execute();
+
+            if ($req->rowCount() == 0) {
+                throw new Exception("❌ Aucun avis trouvé avec cet ID.");
             }
-        } else {
-            throw new Exception("Avis non trouvé");
-        }
-    }
-    public function upavis($numero, $id, $messageContent, $note) {
-        $avis = $this->getAvisById($id); // Récupérer l'avis par ID
 
-        if ($avis) {
-            // Préparer la requête de mise à jour
-            $conn = config::getConnexion();
-            try {
-                $stmt = $conn->prepare("UPDATE avis SET message = ?, note = ? WHERE numero = ? AND id = ?");
-                $stmt->execute([$messageContent, $note, $numero, $id]);
-            } catch (PDOException $e) {
-                die('Erreur : ' . $e->getMessage());
-            }
-        } else {
-            throw new Exception("Avis non trouvé");
+            return true; // Suppression réussie
+        } catch (PDOException $e) {
+            throw new Exception("Erreur BDD lors de la suppression de l'avis : " . $e->getMessage());
         }
     }
-
-    public function deleteAvis($numero, $id) {
-        $conn = config::getConnexion();
-        
-        // Vérifier si l'avis existe d'abord
-        $stmt = $conn->prepare("SELECT * FROM avis WHERE numero = :numero AND id = :id");
-        $stmt->bindParam(':numero', $numero);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        
-        if ($stmt->rowCount() > 0) {
-            // L'avis existe, on peut procéder à la suppression
-            $query = "DELETE FROM avis WHERE numero = :numero AND id = :id";
-            $stmt = $conn->prepare($query);
-            $stmt->bindParam(':numero', $numero);
-            $stmt->bindParam(':id', $id);
+    public function getAllAvis() {
+        try {
+            $db = config::getConnexion();
+            $sql = "SELECT * FROM avis";
+            $req = $db->prepare($sql);
+            $req->execute();
+            return $req->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération des avis : " . $e->getMessage());
+        }
+    }
+    public function getAllReponses() {
+        try {
+            // Connexion à la base de données
+            $pdo = config::getConnexion();
     
-            return $stmt->execute(); // Retourne true si la suppression réussie
-        } else {
-            echo "Aucun avis trouvé à supprimer avec le numero: $numero et id: $id";
-            return false; // Aucun avis trouvé
+            // Requête pour récupérer toutes les réponses
+            $sql = "SELECT * FROM repond_avis";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+    
+            // Retourner les résultats sous forme de tableau associatif
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // En cas d'erreur, afficher un message d'erreur spécifique
+            echo "Erreur de connexion ou de récupération des données : " . $e->getMessage();
+            return [];
         }
     }
     
-    public function suppavis($numero, $id) {
-        $conn = config::getConnexion();
-        $query = "DELETE FROM avis WHERE numero = :numero AND id = :id";
-        $stmt = $conn->prepare($query);
-    
-        // Lier les paramètres
-        $stmt->bindParam(':numero', $numero);
-        $stmt->bindParam(':id', $id);
-    
-        // Exécuter la requête
-        return $stmt->execute(); // Retourne true si la suppression a réussi
-    }
 }
 ?>

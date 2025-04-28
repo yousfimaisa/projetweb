@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <li><a href="listrepondavis.php">Liste des Réponses Avis</a></li>
         <li><a href="deleterepondavis.php">Supprimer une Réponse Avis</a></li>
         <li><a href="uprepondreavis.php?id=<?php echo $id; ?>">Mettre à jour une Réponse Avis</a></li>
+        <li><a href="dashboardBack.php">Retour au Dashboard</a></li>
     </ul>
 </nav>
 

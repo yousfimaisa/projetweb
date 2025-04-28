@@ -1,81 +1,90 @@
-/* Styles généraux */
+/* Style général */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-/* Conteneur principal pour diviser le menu latéral et le contenu */
-.container {
+    font-family: 'Arial', sans-serif;
+    background-color: #2c3e50;
+    color: #ecf0f1; /* Texte clair */
+    min-height: 100vh;
     display: flex;
-    height: 100vh;
+    flex-direction: column;
 }
 
-/* Style du menu latéral */
-.sidebar {
-    width: 250px;
-    background-color: #333;
-    padding-top: 20px;
-    position: fixed;
-    height: 100%;
+/* Top header */
+.top-header {
+    background-color: #34495e;
+    padding: 20px 0;
 }
 
-.sidebar ul {
+.top-header nav ul {
     list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar ul li {
-    text-align: center;
-}
-
-.sidebar ul li a {
-    color: white;
-    padding: 15px;
-    display: block;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-.sidebar ul li a:hover {
-    background-color: #575757;
-}
-
-/* Style du contenu */
-.content {
-    margin-left: 250px;
-    padding: 20px;
-    width: calc(100% - 250px);
-}
-
-/* Tableau de bord */
-.dashboard-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
+    justify-content: center; /* Centrer horizontalement */
+    margin: 0;
+    padding: 0;
 }
 
-.stat-widget {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.top-header nav ul li {
+    margin: 0 20px;
+}
+
+.top-header nav ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    background-color: #2980b9;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.top-header nav ul li a:hover {
+    background-color: #3498db;
+}
+
+/* Titre principal */
+h1 {
     text-align: center;
-    width: 200px;
-    box-sizing: border-box;
+    margin: 30px 0;
 }
 
-.stat-widget h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
+/* Liste des avis */
+.avis-list {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 50px;
 }
 
-.stat-widget p {
-    font-size: 24px;
+.avis-item {
+    background-color: #34495e;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Bouton "Répondre" */
+.btn-repondre {
+    display: inline-block;
+    margin-top: 15px;
+    background-color: #e67e22;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
     font-weight: bold;
-    color: #333;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-repondre:hover {
+    background-color: #d35400;
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    background-color: #34495e;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: auto;
 }

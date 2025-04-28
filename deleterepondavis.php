@@ -25,6 +25,7 @@ if (isset($_GET['id'])) {
             <li><a href="listrepondavis.php">Liste des Réponses Avis</a></li>
             <li><a href="deleterepondavis.php">Supprimer une Réponse Avis</a></li>
             <li><a href="uprepondreavis.php">Mettre à jour des Réponses Avis</a></li>
+            <li><a href="dashboardBack.php">Retour au Dashboard</a></li>
         </ul>
     </nav>
 </head>

@@ -14,7 +14,7 @@ $avisList = $avisController->listAvis(); // Appeler la méthode listAvis
     <nav>
         <ul>
             <li><a href="listAvisBack.php">Liste des Avis</a></li>
-            <li><a href="deleteAvisBack.php">Suppression</a></li>
+           
         </ul>
     </nav>
 </header>

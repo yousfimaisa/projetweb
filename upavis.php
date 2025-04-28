@@ -1,74 +1,82 @@
 <?php
-include '../../controller/aviscontroller.php'; // Inclure le contrôleur
+require_once '../../controller/aviscontroller.php';
 
+// Création de l'instance du contrôleur d'avis
 $avisController = new AvisController();
 
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-
-    // Récupérer l'avis par ID
-    $avis = $avisController->getAvisById($id); // Utiliser getAvisById
-    if (!$avis) {
-        // Redirection ou message d'erreur si l'avis n'est pas trouvé
-        header('Location: lireavis.php?error=Avis non trouvé');
-        exit();
-    }
-} else {
-    // Redirection si l'ID n'est pas défini
-    header('Location: lireavis.php');
-    exit();
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupérer les données du formulaire
-    $numero = $_POST['numero'];
-    $id = $_POST['id'];
-    $messageContent = $_POST['message'];
-    $note = $_POST['note'];
-
-    // Mettre à jour l'avis
-    $avisController->upavis($numero, $id, $messageContent, $note); // Assurez-vous que cette méthode existe
-
-    // Redirection après mise à jour
-    header('Location: lireavis.php');
-    exit();
-}
+// Récupérer tous les avis
+$avisList = $avisController->getAllAvis();
 ?>
-<html>
+
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-    <title>Modifier l'Avis</title>
-    <link rel="stylesheet" href="ajout.css"> <!-- Vérifiez que le chemin est correct -->
+    <meta charset="UTF-8">
+    <title>Modifier Avis</title>
+    <link rel="stylesheet" href="ajout.css">
+    <style>
+        .btn {
+            display: inline-block; /* Assurez-vous que le bouton est affiché */
+            padding: 10px 15px;
+            background-color: #007bff; /* Couleur de fond */
+            color: white; /* Couleur du texte */
+            text-decoration: none; /* Pas de soulignement */
+            border-radius: 5px; /* Coins arrondis */
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3; /* Couleur au survol */
+        }
+    </style>
 </head>
 <body>
+
 <header>
-    <h1>Modifier l'Avis</h1>
+    <h1>Mise à jour des Avis</h1>
     <nav>
         <ul>
             <li><a href="ajoutavis.php">Ajout Avis</a></li>
-            <li><a href="suppavis.php">Suppression</a></li>
-            <li><a href="upavis.php">Mise à Jour</a></li>
             <li><a href="lireavis.php">Lire Avis</a></li>
+            <li><a href="upavis.php">Mise à jour</a></li>
+            <li><a href="suppavis.php">Suppression</a></li>
         </ul>
     </nav>
 </header>
 
 <div class="container">
-    <form action="upavis.php?id=<?php echo urlencode($id); ?>" method="post" class="form-group">
-        <input type="hidden" name="numero" value="<?php echo htmlspecialchars($avis['numero']); ?>">
-        <input type="hidden" name="id" value="<?php echo htmlspecialchars($avis['id']); ?>">
-
-        <label>Message:</label>
-        <textarea name="message" required><?php echo htmlspecialchars($avis['message']); ?></textarea>
-
-        <label>Note (1 à 5):</label>
-        <input type="number" name="note" min="1" max="5" value="<?php echo htmlspecialchars($avis['note']); ?>" required>
-
-        <button type="submit" class="btn btn-primary">Mettre à Jour</button>
-    </form>
+    <h2>Liste des Avis</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Message</th>
+                <th>Note</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // Affichage des avis dans un tableau
+            if ($avisList) {
+                foreach ($avisList as $avis) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($avis['id']) . "</td>";
+                    echo "<td>" . htmlspecialchars($avis['message']) . "</td>";
+                    echo "<td>" . htmlspecialchars($avis['note']) . "</td>";
+                    echo "<td><a href='modifieravis.php?id=" . $avis['id'] . "' class='btn'>Modifier</a></td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='4'>Aucun avis disponible.</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
 </div>
 
 <footer>
-    <p>&copy; 2025 : Need for Ride</p>
+    <p>&copy; 2025 Covoiturage. Tous droits réservés.</p>
 </footer>
 
 </body>
