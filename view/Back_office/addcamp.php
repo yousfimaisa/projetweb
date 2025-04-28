@@ -23,10 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validation côté serveur
     if (empty($nom_camp)) {
         $errors[] = "Le nom de la campagne est requis.";
+    } elseif (is_numeric($nom_camp[0])) {
+        $errors[] = "Le nom de la campagne ne doit pas commencer par un chiffre.";
     }
 
     if (empty($description)) {
-        $errors[] = "La description de la campagne est requise.";
+        $errors[] = "La description est requise.";
+    } elseif (strlen($description) > 200) {
+        $errors[] = "La description ne doit pas dépasser 200 caractères.";
     }
 
     // Si pas d'erreurs, ajouter la campagne
@@ -213,8 +217,8 @@ $promotions = $promotionController->getAllPromotions();
         </select>
 
         <button type="submit" class="btn">Ajouter Campagne</button>
-        <a href="javascript:history.back()" class="btn" style="background-color:#e74c3c;">Retour</a>
-    </form>
+        <a href="admin_dashboard.php" class="btn" style="background-color:#e74c3c;">Retour</a>
+        </form>
 </div>
 
 <footer>
