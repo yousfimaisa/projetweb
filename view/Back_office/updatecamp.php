@@ -1,10 +1,10 @@
+
+
 <?php
 include_once __DIR__ . '/../../model/camp.php';
 include_once __DIR__ . '/../../controller/campcontroller.php';
-
 $campController = new CampController();
 $message = "";
-
 // Mise à jour si formulaire soumis
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
     // Sécurise les entrées avec fallback
@@ -13,35 +13,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
     $desc = $_POST['description'] ?? '';
     $promo = $_POST['cd_promotion'] ?? '';
     $statut = $_POST['statut'] ?? '';
-
     $campagne = new Camp($id, $nom, $desc, $promo, $statut);
-
     $campController->updateCampagne($campagne);
-
     session_start();
     $_SESSION['message'] = "Campagne modifiée avec succès.";
     header("Location: updatecampagne.php");
     exit();
 }
-
 // Message succès
 session_start();
 if (isset($_SESSION['message'])) {
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
 }
-
 // Suppression
 if (isset($_GET['delete_id'])) {
     $campController->deleteCampagne($_GET['delete_id']);
     $message = "Campagne supprimée avec succès.";
 }
-
 // Liste campagnes
 $list = $campController->listCampagne();
 $editingId = $_GET['id'] ?? null;
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -170,11 +163,9 @@ $editingId = $_GET['id'] ?? null;
     </style>
 </head>
 <body>
-
 <header>
     <h1>Need For Ride - Modifier une Campagne</h1>
 </header>
-
 <nav>
     <ul>
         <li><a href="#">Accueil</a></li>
@@ -183,14 +174,11 @@ $editingId = $_GET['id'] ?? null;
         <li><a href="#">Trajets</a></li>
     </ul>
 </nav>
-
 <div class="container">
     <h2>Gestion des Campagnes</h2>
-
     <?php if ($message): ?>
         <div class="msg"><?= $message ?></div>
     <?php endif; ?>
-
     <table>
         <thead>
         <tr>
@@ -241,11 +229,11 @@ $editingId = $_GET['id'] ?? null;
         </tbody>
     </table>
 </div>
-
 <footer>
     <a href="javascript:history.back()" class="btn-back">Retour</a>
     <p>&copy; 2025 Need For Ride. Tous droits réservés.</p>
 </footer>
-
 </body>
 </html>
+
+
