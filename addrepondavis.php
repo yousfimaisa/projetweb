@@ -1,5 +1,7 @@
 <?php
 require_once '../../controller/repondaviscontroller.php';
+require_once '../../model/Repondavis.php';
+
 require_once '../../config.php';  // Assurez-vous que vous avez le fichier de configuration pour la connexion à la base de données
 
 // Connexion à la base de données via la classe config
