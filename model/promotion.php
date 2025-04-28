@@ -5,32 +5,61 @@ class Promotion {
     private $date_debut;
     private $date_fin;
     private $valeur;
-    private $user_id;
 
-    // 
-    public function __construct($code_promotion, $date_debut, $date_fin, $valeur, $user_id, $id = null) {
+    public function __construct($code_promotion, $date_debut, $date_fin, $valeur, $id = null) {
         $this->id = $id;
         $this->code_promotion = $code_promotion;
         $this->date_debut = $date_debut;
         $this->date_fin = $date_fin;
         $this->valeur = $valeur;
-        $this->user_id = $user_id;
     }
-    public function getAllPromotions() {
-        // Ici tu fais une requête SQL pour récupérer toutes les promotions
-        // Par exemple :
-        $sql = "SELECT * FROM promotions";
-        $db = config::getConnexion();
-        
+    public static function getAll() {
+        $sql = "SELECT * FROM promotions"; // Remplace "promotions" par le nom de ta table si nécessaire
+        $db = config::getConnexion(); // Assure-toi que tu as une classe `config` pour la connexion DB
         try {
-            $query = $db->prepare($sql);
-            $query->execute();
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la récupération des promotions : " . $e->getMessage());
-        }}
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Récupère toutes les promotions sous forme de tableau
+        } catch (Exception $e) {
+            throw new Exception("Erreur : " . $e->getMessage());
+        }
+    }
 
-    // Getters pour récupérer les valeurs des propriétés
+    
+    public function save() {
+        if ($this->id) {
+            // Mise à jour
+            $sql = "UPDATE promotions SET code_promotion = :code, date_debut = :date_debut, date_fin = :date_fin, valeur = :valeur WHERE id = :id";
+        } else {
+            // Insertion
+            $sql = "INSERT INTO promotions (code_promotion, date_debut, date_fin, valeur) VALUES (:code, :date_debut, :date_fin, :valeur)";
+        }
+
+        $db = config::getConnexion();
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':code', $this->getCodePromotion(), PDO::PARAM_STR);
+            $stmt->bindValue(':date_debut', $this->getDateDebut(), PDO::PARAM_STR);
+            $stmt->bindValue(':date_fin', $this->getDateFin(), PDO::PARAM_STR);
+            $stmt->bindValue(':valeur', $this->getValeur(), PDO::PARAM_STR);
+
+            if ($this->id) {
+                $stmt->bindValue(':id', $this->getId(), PDO::PARAM_INT);
+            }
+
+            $stmt->execute();
+
+            if (!$this->id) {
+                $this->setId($db->lastInsertId());
+            }
+
+            return true;
+        } catch (Exception $e) {
+            throw new Exception("Erreur lors de la sauvegarde de la promotion : " . $e->getMessage());
+        }
+    }
+
+    // Getters
     public function getId() {
         return $this->id;
     }
@@ -51,11 +80,7 @@ class Promotion {
         return $this->valeur;
     }
 
-    public function getUserId() {
-        return $this->user_id;
-    }
-
-    // Setters pour modifier les valeurs des propriétés
+    // Setters
     public function setId($id) {
         $this->id = $id;
     }
@@ -74,10 +99,6 @@ class Promotion {
 
     public function setValeur($valeur) {
         $this->valeur = $valeur;
-    }
-
-    public function setUserId($user_id) {
-        $this->user_id = $user_id;
     }
 }
 ?>
