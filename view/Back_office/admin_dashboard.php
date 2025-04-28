@@ -4,92 +4,176 @@ include __DIR__ . '/../../includes/header.php';
 ?>
 
 <style>
-  body {
-    background-color: #111;
-    color: #fff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+    body {
+        font-family: 'Poppins', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6f9;
+        color: #333;
+    }
 
-  .dashboard-container {
-    max-width: 800px;
-    margin: 100px auto;
-    text-align: center;
-    padding: 40px;
-    background-color: #1a1a1a;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-  }
+    header {
+        background-color: #3498db;
+        color: white;
+        padding: 1.5rem 0;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-  .dashboard-container h2 {
-    font-size: 32px;
-    margin-bottom: 10px;
-    color: #4CAF50;
-  }
+    nav {
+        background-color: #2980b9;
+        padding: 0.8rem 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 
-  .dashboard-container p {
-    font-size: 18px;
-    color: #ccc;
-  }
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 
-  .dashboard-buttons {
-    margin-top: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+    nav ul li {
+        margin: 0 12px;
+    }
 
-  .dashboard-buttons a {
-    padding: 15px 30px;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.3s, transform 0.2s;
-  }
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        transition: background 0.3s;
+    }
 
-  .btn-ajouter {
-    background-color: #4CAF50;
-    color: #fff;
-  }
+    nav ul li a:hover {
+        background-color: #1c638d;
+    }
 
-  .btn-ajouter:hover {
-    background-color: #45a049;
-    transform: scale(1.03);
-  }
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        animation: fadeIn 1s ease-in;
+    }
 
-  .btn-update {
-    background-color: #a83232;
-    color: #fff;
-  }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-  .btn-update:hover {
-    background-color: #8c2626;
-    transform: scale(1.03);
-  }
+    .dashboard-box h2 {
+        text-align: center;
+        color: #34495e;
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
 
-  .btn-lister {
-    background-color: #000;
-    color: #fff;
-    border: 1px solid #4CAF50;
-  }
+    .dashboard-box p {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 30px;
+        color: #666;
+    }
 
-  .btn-lister:hover {
-    background-color: #222;
-    transform: scale(1.03);
-  }
+    .dashboard-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .dashboard-buttons a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 25px 20px;
+        background-color: #34495e;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        transition: transform 0.3s, background-color 0.3s;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .dashboard-buttons a:hover {
+        background-color: #2c3e50;
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .dashboard-buttons a i {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    footer {
+        background-color: #34495e;
+        color: white;
+        text-align: center;
+        padding: 1rem 0;
+        margin-top: 40px;
+    }
+
+    .btn-back {
+        background-color: #34495e;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-back:hover {
+        background-color: #2c3e50;
+    }
 </style>
 
-<div class="dashboard-container">
-  <h2>Bienvenue dans le tableau de bord Admin</h2>
-  <p>Choisissez une option :</p>
+<!-- Liens pour les icônes (FontAwesome) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-  <div class="dashboard-buttons">
-    <a href="addpromotion.php" class="btn-ajouter">Ajouter une Promotion</a>
-    <a href="updatepromotion.php" class="btn-update">Mettre à jour une Promotion</a>
-    <a href="listpromotion.php" class="btn-lister">Afficher les Promotions</a>
-  </div>
+<header>
+    <h1>Tableau de bord Admin - Need For Ride</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#"><i class="fas fa-home"></i> Accueil</a></li>
+        <li><a href="#"><i class="fas fa-car"></i> Trajets</a></li>
+        <li><a href="#"><i class="fas fa-tag"></i> Promotions</a></li>
+        <li><a href="#"><i class="fas fa-star"></i> Avis</a></li>
+        <li><a href="#"><i class="fas fa-credit-card"></i> Paiement</a></li>
+        <li><a href="#"><i class="fas fa-bullhorn"></i> Campagnes</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div class="dashboard-box">
+        <h2>Bienvenue dans le tableau de bord Admin</h2>
+        <p>Choisissez une option :</p>
+
+        <div class="dashboard-buttons">
+            <a href="addpromotion.php"><i class="fas fa-plus-circle"></i> Ajouter une Promotion</a>
+            <a href="addcamp.php"><i class="fas fa-plus-circle"></i> Ajouter une Campagne</a>
+            <a href="updatepromotion.php"><i class="fas fa-edit"></i> Modifier une Promotion</a>
+            <a href="updatecamp.php"><i class="fas fa-edit"></i> Modifier une Campagne</a>
+            <a href="listpromotion.php"><i class="fas fa-list"></i> Liste des Promotions</a>
+            <a href="listcamp.php"><i class="fas fa-list"></i> Liste des Campagnes</a>
+        </div>
+    </div>
 </div>
+
+<a href="javascript:history.back()" class="btn-back"><i class="fas fa-arrow-left"></i> Retour</a>
 
 <?php include __DIR__ . '/../../includes/footer.php'; ?>
