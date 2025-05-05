@@ -1,4 +1,4 @@
-<?php
+<?php 
 $pageTitle = "Tableau de bord Admin - Need For Ride";
 include __DIR__ . '/../../includes/header.php';
 ?>
@@ -18,6 +18,29 @@ include __DIR__ . '/../../includes/header.php';
         padding: 1.5rem 0;
         text-align: center;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    /* Mini profil de l'admin */
+    .admin-profile {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+
+    .admin-profile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .admin-profile span {
+        font-size: 16px;
+        font-weight: bold;
     }
 
     nav {
@@ -51,6 +74,37 @@ include __DIR__ . '/../../includes/header.php';
         background-color: #1c638d;
     }
 
+    .dashboard-wrapper {
+        display: flex;
+    }
+
+    .sidebar {
+        width: 220px;
+        background-color: #2c3e50;
+        padding: 30px 15px;
+        height: 100vh;
+        position: fixed;
+        top: 120px; /* header + nav height */
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    }
+
+    .sidebar a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        margin-bottom: 20px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+    .sidebar a:hover {
+        color: #1abc9c;
+    }
+
     .container {
         width: 90%;
         max-width: 1200px;
@@ -60,6 +114,7 @@ include __DIR__ . '/../../includes/header.php';
         border-radius: 12px;
         box-shadow: 0 6px 20px rgba(0,0,0,0.1);
         animation: fadeIn 1s ease-in;
+        margin-left: 240px; /* adjust for sidebar */
     }
 
     @keyframes fadeIn {
@@ -138,42 +193,143 @@ include __DIR__ . '/../../includes/header.php';
     .btn-back:hover {
         background-color: #2c3e50;
     }
+
+    .btn-toggle {
+        background-color: transparent;
+        color: white;
+        border: 1px solid white;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .btn-toggle:hover {
+        background-color: #1c2833;
+    }
+
+    /* DARK THEME */
+    .dark-theme {
+        background-color: #121212;
+        color: #f0f0f0;
+    }
+
+    .dark-theme header,
+    .dark-theme nav,
+    .dark-theme footer,
+    .dark-theme .container {
+        background-color: #1e1e1e;
+        color: #f0f0f0;
+    }
+
+    .dark-theme nav ul li a {
+        color: #f0f0f0;
+    }
+
+    .dark-theme nav ul li a:hover {
+        background-color: #333;
+    }
+
+    .dark-theme .dashboard-buttons a {
+        background-color: #2c3e50;
+    }
+
+    .dark-theme .dashboard-buttons a:hover {
+        background-color: #1a252f;
+    }
+
+    .dark-theme .btn-toggle {
+        color: #f0f0f0;
+        border-color: #f0f0f0;
+    }
+
+    .dark-theme .btn-toggle:hover {
+        background-color: #333;
+    }
+
+    .dark-theme .sidebar {
+        background-color: #1a252f;
+    }
+
+    .dark-theme .sidebar a {
+        color: #f0f0f0;
+    }
+
+    .dark-theme .sidebar a:hover {
+        color: #1abc9c;
+    }
 </style>
 
-<!-- Liens pour les icônes (FontAwesome) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="../view/Back_office/dark-theme.css">
+<script src="../view/Back_office/theme.js"></script>
 
 <header>
     <h1>Tableau de bord Admin - Need For Ride</h1>
+    <div class="admin-profile">
+    <img src="/CRUDin/assets/images/admin.jpg" alt="Admin" class="admin-img">
+
+
+
+        <span>Admin</span>
+    </div>
 </header>
 
 <nav>
     <ul>
-        <li><a href="#"><i class="fas fa-home"></i> Accueil</a></li>
+        <li><a href="http://localhost/CRUDin/index.php"><i class="fas fa-home"></i> Accueil</a></li>
         <li><a href="#"><i class="fas fa-car"></i> Trajets</a></li>
         <li><a href="#"><i class="fas fa-tag"></i> Promotions</a></li>
         <li><a href="#"><i class="fas fa-star"></i> Avis</a></li>
         <li><a href="#"><i class="fas fa-credit-card"></i> Paiement</a></li>
         <li><a href="#"><i class="fas fa-bullhorn"></i> Campagnes</a></li>
+        <li><button id="themeToggle" class="btn-toggle">🌓 Mode Sombre</button></li>
     </ul>
 </nav>
 
-<div class="container">
-    <div class="dashboard-box">
-        <h2>Bienvenue dans le tableau de bord Admin</h2>
-        <p>Choisissez une option :</p>
+<div class="dashboard-wrapper">
 
-        <div class="dashboard-buttons">
-            <a href="addpromotion.php"><i class="fas fa-plus-circle"></i> Ajouter une Promotion</a>
-            <a href="addcamp.php"><i class="fas fa-plus-circle"></i> Ajouter une Campagne</a>
-            <a href="updatepromotion.php"><i class="fas fa-edit"></i> Modifier une Promotion</a>
-            <a href="updatecamp.php"><i class="fas fa-edit"></i> Modifier une Campagne</a>
-            <a href="listpromotion.php"><i class="fas fa-list"></i> Liste des Promotions</a>
-            <a href="listcamp.php"><i class="fas fa-list"></i> Liste des Campagnes</a>
+    <aside class="sidebar">
+        <a href="metier_avancee.php"><i class="fas fa-chart-line"></i> Statistiques</a>
+        <a href="exporter_promos.php"><i class="fas fa-file-pdf"></i> Exporter Promotions (PDF)</a>
+     <a href="exporter_campagnes.php"><i class="fas fa-file-pdf"></i> Exporter Campagnes (PDF)</a>
+
+        <a href="mail.php"><i class="fas fa-sign-out-alt"></i> 📬 Envoyer une campagne par mail</a>
+        <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+    </aside>
+
+    <div class="container">
+        <div class="dashboard-box">
+            <h2>Bienvenue dans le tableau de bord Admin</h2>
+            <p>Choisissez une option :</p>
+
+            <div class="dashboard-buttons">
+                <a href="addpromotion.php"><i class="fas fa-plus-circle"></i> Ajouter une Promotion</a>
+                <a href="addcamp.php"><i class="fas fa-plus-circle"></i> Ajouter une Campagne</a>
+                <a href="updatepromotion.php"><i class="fas fa-edit"></i> Modifier une Promotion</a>
+                <a href="updatecamp.php"><i class="fas fa-edit"></i> Modifier une Campagne</a>
+                <a href="listpromotion.php"><i class="fas fa-list"></i> Liste des Promotions</a>
+                <a href="listcamp.php"><i class="fas fa-list"></i> Liste des Campagnes</a>
+            </div>
         </div>
     </div>
+
 </div>
 
-<a href="javascript:history.back()" class="btn-back"><i class="fas fa-arrow-left"></i> Retour</a>
+<a href="javascript:history.back()" class="btn-back">Retour</a>
 
-<?php include __DIR__ . '/../../includes/footer.php'; ?>
+<script>
+    document.getElementById('themeToggle').addEventListener('click', function () {
+        document.body.classList.toggle('dark-theme');
+        const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+    });
+
+    // Check for saved theme in localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+</script>
+
+<footer>
+    <p>&copy; 2025 Need For Ride. Tous droits réservés.</p>
+</footer>
