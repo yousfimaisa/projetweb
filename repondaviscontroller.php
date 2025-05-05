@@ -1,51 +1,50 @@
 <?php
-require_once 'C:/xampp/htdocs/dele3a/CRUD/config.php'; // Chemin vers config.php
-require_once 'C:/xampp/htdocs/dele3a/CRUD/config.php';
+require_once 'C:/final/htdocs/CRUD/config.php';
 
 class RepondAvisController
 {
-    // Propriété pour la connexion à la base de données
     private $db;
 
-    // Constructeur pour initialiser la connexion à la base de données
     public function __construct()
     {
         $this->db = config::getConnexion();
     }
 
-    // Vérifier si l'avis existe dans la base de données
-    public function avisExists($avis_id)
+    // Vérifier si un avis existe
+    public function avisExists(int $avis_id): bool
     {
-        // Sécuriser en forçant à un entier
-        $avis_id = (int)$avis_id;
-
-        // Debug : afficher l'ID de l'avis pour vérifier
-        echo "ID de l'avis vérifié : " . htmlspecialchars($avis_id) . "<br>";
-
-        // Préparer la requête
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM avis WHERE id = :avis_id");
-        $stmt->bindParam(':avis_id', $avis_id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        // Retourner true si trouvé
-        return $stmt->fetchColumn() > 0;
+        try {
+            $stmt = $this->db->prepare("SELECT 1 FROM avis WHERE id = :avis_id LIMIT 1");
+            $stmt->bindParam(':avis_id', $avis_id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch() !== false;
+        } catch (PDOException $e) {
+            error_log("Erreur SQL (avisExists) : " . $e->getMessage());
+            return false;
+        }
     }
 
-    // Méthode pour ajouter une réponse
-    public function addReponse($reponseAvis)
+    // Ajouter une réponse à un avis existant
+    public function addReponse($reponseAvis): string
     {
+        if (!is_object($reponseAvis)) {
+            return "L'objet de réponse est invalide.";
+        }
+
         $avis_id = $reponseAvis->getAvisId();
 
-        // Vérifier si l'avis existe
         if (!$this->avisExists($avis_id)) {
             return "L'ID de l'avis spécifié n'existe pas.";
         }
 
         try {
-            // Si l'avis existe, ajouter la réponse
             $sql = "INSERT INTO repond_avis (avis_id, reponse) VALUES (:avis_id, :reponse)";
             $stmt = $this->db->prepare($sql);
-            $reponse = $reponseAvis->getReponse(); // attention ici, pas getMessage() !
+            $reponse = $reponseAvis->getReponse();
+            
+            // Afficher les valeurs avant l'exécution de la requête
+            echo "Avis ID: " . $avis_id . ", Réponse: " . $reponse;
+
             $stmt->bindParam(':avis_id', $avis_id, PDO::PARAM_INT);
             $stmt->bindParam(':reponse', $reponse, PDO::PARAM_STR);
             $stmt->execute();
@@ -53,15 +52,16 @@ class RepondAvisController
             if ($stmt->rowCount() > 0) {
                 return "Réponse ajoutée avec succès.";
             } else {
-                return "Échec de l'ajout de la réponse.";
+                return "Aucune réponse ajoutée.";
             }
         } catch (PDOException $e) {
+            // Afficher l'erreur SQL
             return "Erreur lors de l'ajout de la réponse : " . $e->getMessage();
         }
     }
 
-    // Méthode pour lister toutes les réponses
-    public function getAllReponses()
+    // Récupérer toutes les réponses
+    public function getAllReponses(): array
     {
         try {
             $sql = "SELECT * FROM repond_avis";
@@ -69,12 +69,13 @@ class RepondAvisController
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
+            error_log("Erreur SQL (getAllReponses) : " . $e->getMessage());
             return [];
         }
     }
 
-    // Méthode pour supprimer une réponse par son ID
-    public function deleteReponseById($id)
+    // Supprimer une réponse par son ID
+    public function deleteReponseById(int $id): bool
     {
         try {
             $sql = "DELETE FROM repond_avis WHERE id = :id";
@@ -82,12 +83,13 @@ class RepondAvisController
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             return $stmt->execute();
         } catch (PDOException $e) {
+            error_log("Erreur SQL (deleteReponseById) : " . $e->getMessage());
             return false;
         }
     }
 
-    // Méthode pour mettre à jour une réponse
-    public function updateReponse($id, $newReponse)
+    // Mettre à jour une réponse existante
+    public function updateReponse(int $id, string $newReponse): bool
     {
         try {
             $sql = "UPDATE repond_avis SET reponse = :reponse WHERE id = :id";
@@ -96,12 +98,13 @@ class RepondAvisController
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             return $stmt->execute();
         } catch (PDOException $e) {
+            error_log("Erreur SQL (updateReponse) : " . $e->getMessage());
             return false;
         }
     }
 
-    // Méthode pour récupérer tous les avis
-    public function getAllAvis()
+    // Récupérer tous les avis
+    public function getAllAvis(): array
     {
         try {
             $sql = "SELECT * FROM avis";
@@ -109,6 +112,7 @@ class RepondAvisController
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
+            error_log("Erreur SQL (getAllAvis) : " . $e->getMessage());
             return [];
         }
     }

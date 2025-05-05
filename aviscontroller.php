@@ -67,11 +67,18 @@ class AvisController {
         }
     }
 
-    // Méthode pour récupérer tous les avis
+    // Méthode pour récupérer tous les avis avec classification
     public function listAvis() {
         try {
             $db = config::getConnexion();
-            $sql = "SELECT * FROM avis";
+            $sql = "SELECT *, 
+                    CASE 
+                        WHEN note <= 2 THEN 'negative'
+                        WHEN note >= 4 THEN 'positive'
+                        ELSE 'neutral'
+                    END as avis_style
+                    FROM avis
+                    ORDER BY date_avis DESC";
             $req = $db->prepare($sql);
             $req->execute();
             return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -83,54 +90,64 @@ class AvisController {
     // Méthode pour supprimer un avis par ID
     public function deleteAvis($id) {
         if (!is_numeric($id) || $id <= 0) {
-            throw new Exception("L'ID de l'avis est invalide.");
+            throw new Exception("❌ L'ID de l'avis est invalide.");
         }
-
+    
         try {
             $db = config::getConnexion();
+            
+            // Désactiver temporairement les contraintes de clé étrangère
+            $db->exec("SET FOREIGN_KEY_CHECKS = 0");
+            
+            // Supprimer uniquement de la table avis
             $sql = "DELETE FROM avis WHERE id = :id";
             $req = $db->prepare($sql);
             $req->bindParam(':id', $id, PDO::PARAM_INT);
             $req->execute();
-
+            
+            // Réactiver les contraintes
+            $db->exec("SET FOREIGN_KEY_CHECKS = 1");
+            
             if ($req->rowCount() == 0) {
                 throw new Exception("❌ Aucun avis trouvé avec cet ID.");
             }
-
-            return true; // Suppression réussie
+    
+            return true;
         } catch (PDOException $e) {
             throw new Exception("Erreur BDD lors de la suppression de l'avis : " . $e->getMessage());
         }
     }
-    public function getAllAvis() {
+
+    // Méthode pour compter les avis négatifs
+    public function countNegativeAvis() {
         try {
             $db = config::getConnexion();
-            $sql = "SELECT * FROM avis";
+            $sql = "SELECT COUNT(*) as count FROM avis WHERE note <= 2";
             $req = $db->prepare($sql);
             $req->execute();
-            return $req->fetchAll(PDO::FETCH_ASSOC);
+            return $req->fetch(PDO::FETCH_ASSOC)['count'];
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la récupération des avis : " . $e->getMessage());
+            throw new Exception("Erreur BDD lors du comptage des avis négatifs : " . $e->getMessage());
         }
     }
+
+    // Méthode pour récupérer tous les avis (compatibilité)
+    public function getAllAvis() {
+        return $this->listAvis();
+    }
+
+    // Méthode pour récupérer toutes les réponses
     public function getAllReponses() {
         try {
-            // Connexion à la base de données
             $pdo = config::getConnexion();
-    
-            // Requête pour récupérer toutes les réponses
             $sql = "SELECT * FROM repond_avis";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
-    
-            // Retourner les résultats sous forme de tableau associatif
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            // En cas d'erreur, afficher un message d'erreur spécifique
             echo "Erreur de connexion ou de récupération des données : " . $e->getMessage();
             return [];
         }
     }
-    
 }
 ?>
