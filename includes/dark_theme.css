@@ -1,0 +1,30 @@
+/* dark-theme.css */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode header,
+body.dark-mode nav,
+body.dark-mode footer {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .container {
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+}
+
+body.dark-mode a {
+    color: #80cbc4;
+}
+
+body.dark-mode .btn-toggle {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+body.dark-mode .btn-toggle:hover {
+    background-color: #1c2833;
+}
