@@ -5,7 +5,7 @@ include_once __DIR__ . '/../../controller/promotioncontroller.php';
 $promotionController = new PromotionController();
 $message = "";
 
-// Mise à jour si formulaire soumis
+// Mise à jour
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
     $promotion = new Promotion(
         $_POST['id'],
@@ -14,29 +14,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['id'])) {
         $_POST['date_fin'],
         $_POST['valeur']
     );
-
     $promotionController->updatePromotion($promotion);
-
     session_start();
     $_SESSION['message'] = "Promotion modifiée avec succès.";
     header("Location: updatepromotion.php");
     exit();
 }
 
-// Message succès
 session_start();
 if (isset($_SESSION['message'])) {
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
 }
 
-// Suppression
 if (isset($_GET['delete_id'])) {
     $promotionController->deletePromotion($_GET['delete_id']);
     $message = "Promotion supprimée avec succès.";
 }
 
-// Liste promotions
 $list = $promotionController->listPromotion();
 $editingId = $_GET['id'] ?? null;
 ?>
@@ -47,6 +42,7 @@ $editingId = $_GET['id'] ?? null;
     <meta charset="UTF-8">
     <title>Modifier une Promotion</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../includes/dark-theme.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -54,61 +50,65 @@ $editingId = $_GET['id'] ?? null;
             background-color: #f4f4f4;
         }
 
-        header {
-            background-color: #3498db;
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-        }
-
-        nav {
-            background-color: #2980b9;
-            padding: 0.5rem 0;
-        }
-
-        nav ul {
+        .main-content {
             display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 0;
-            margin: 0;
         }
 
-        nav ul li {
-            margin: 0 10px;
-        }
+        .sidebar {
+        width: 250px;
+        padding: 30px 15px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #2980b9;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+        transition: width 0.3s ease-in-out;
+        color: white;
+        overflow-y: auto;
+    }
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 5px 10px;
-        }
+    .sidebar a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 20px;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.3s ease-in-out;
+    }
 
-        nav ul li a:hover {
-            background-color: #1c638d;
-            border-radius: 4px;
-        }
+    .sidebar a:hover {
+        background-color: #34495e;
+        transform: translateX(10px);
+    }
 
-        .container {
-            width: 90%;
-            margin: 40px auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
+    .sidebar a.active {
+        background-color: #1abc9c;
+        color: white;
+    }
 
-        h2 {
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin-left: 270px; /* Adjust for sidebar */
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-in;
+    }
+        h1 {
             text-align: center;
             color: #2980b9;
-            margin-bottom: 20px;
         }
 
         .msg {
             text-align: center;
             color: green;
             font-weight: bold;
-            margin-bottom: 20px;
         }
 
         table {
@@ -127,9 +127,7 @@ $editingId = $_GET['id'] ?? null;
             background-color: #ecf0f1;
         }
 
-        input[type="text"],
-        input[type="date"],
-        input[type="number"] {
+        input[type="text"], input[type="date"], input[type="number"] {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
@@ -163,14 +161,6 @@ $editingId = $_GET['id'] ?? null;
             background-color: #c0392b;
         }
 
-        footer {
-            background-color: #34495e;
-            color: white;
-            text-align: center;
-            padding: 1rem 0;
-            margin-top: 40px;
-        }
-
         .btn-back {
             background-color: #34495e;
             color: white;
@@ -180,7 +170,7 @@ $editingId = $_GET['id'] ?? null;
             font-weight: bold;
             position: fixed;
             bottom: 20px;
-            left: 20px;
+            left: 270px;
             z-index: 1000;
         }
 
@@ -188,33 +178,35 @@ $editingId = $_GET['id'] ?? null;
             background-color: #2c3e50;
         }
 
+        footer {
+            background-color: #34495e;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 40px;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Need For Ride - Modifier une Promotion</h1>
-</header>
+<div class="main-content">
+    <aside class="sidebar">
+        <a href="admin_dashboard.php">Dashboard</a>
+        <a href="paiement.php">Gestion Paiement</a>
+        <a href="factures.php">Gestion Facture</a>
+        <a href="admin2.php">Gestion Promotions</a>
+        <a href="avis.php">Gestion Avis</a>
+    </aside>
 
-<nav>
-    <ul>
-        <li><a href="#">Accueil</a></li>
-        <li><a href="#">Promotions</a></li>
-        <li><a href="#">Trajets</a></li>
-        <li><a href="#">Avis</a></li>
-        <li><a href="#">Paiements</a></li>
-    </ul>
-</nav>
+    <div class="container">
+        <h1>Gestion des Promotions</h1>
 
-<div class="container">
-    <h2>Gestion des Promotions</h2>
+        <?php if ($message): ?>
+            <div class="msg"><?= $message ?></div>
+        <?php endif; ?>
 
-    <?php if ($message): ?>
-        <div class="msg"><?= $message ?></div>
-    <?php endif; ?>
-
-    <table>
-        <thead>
+        <table>
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Code</th>
@@ -223,44 +215,46 @@ $editingId = $_GET['id'] ?? null;
                 <th>Valeur</th>
                 <th>Actions</th>
             </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($list as $promotion): ?>
-            <?php if ($promotion['id'] == $editingId): ?>
-                <form method="post" action="updatepromotion.php">
+            </thead>
+            <tbody>
+            <?php foreach ($list as $promotion): ?>
+                <?php if ($promotion['id'] == $editingId): ?>
+                    <form method="post" action="updatepromotion.php">
+                        <tr>
+                            <td>
+                                <?= $promotion['id'] ?>
+                                <input type="hidden" name="id" value="<?= $promotion['id'] ?>">
+                            </td>
+                            <td><input type="text" name="code" value="<?= htmlspecialchars($promotion['code_promotion']) ?>" required></td>
+                            <td><input type="date" name="date_debut" value="<?= htmlspecialchars($promotion['date_debut']) ?>" required></td>
+                            <td><input type="date" name="date_fin" value="<?= htmlspecialchars($promotion['date_fin']) ?>" required></td>
+                            <td><input type="number" name="valeur" value="<?= htmlspecialchars($promotion['valeur']) ?>" required></td>
+                            <td><button type="submit" class="btn">Valider</button></td>
+                        </tr>
+                    </form>
+                <?php else: ?>
                     <tr>
+                        <td><?= $promotion['id'] ?></td>
+                        <td><?= htmlspecialchars($promotion['code_promotion']) ?></td>
+                        <td><?= htmlspecialchars($promotion['date_debut']) ?></td>
+                        <td><?= htmlspecialchars($promotion['date_fin']) ?></td>
+                        <td><?= htmlspecialchars($promotion['valeur']) ?></td>
                         <td>
-                            <?= $promotion['id'] ?>
-                            <input type="hidden" name="id" value="<?= $promotion['id'] ?>">
+                            <a class="btn" href="updatepromotion.php?id=<?= $promotion['id'] ?>">Modifier</a>
+                            <a class="btn-delete" href="updatepromotion.php?delete_id=<?= $promotion['id'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette promotion ?');">Supprimer</a>
                         </td>
-                        <td><input type="text" name="code" value="<?= htmlspecialchars($promotion['code_promotion']) ?>" required></td>
-                        <td><input type="date" name="date_debut" value="<?= htmlspecialchars($promotion['date_debut']) ?>" required></td>
-                        <td><input type="date" name="date_fin" value="<?= htmlspecialchars($promotion['date_fin']) ?>" required></td>
-                        <td><input type="number" name="valeur" value="<?= htmlspecialchars($promotion['valeur']) ?>" required></td>
-                        <td><button type="submit" class="btn">Valider</button></td>
                     </tr>
-                </form>
-            <?php else: ?>
-                <tr>
-                    <td><?= $promotion['id'] ?></td>
-                    <td><?= htmlspecialchars($promotion['code_promotion']) ?></td>
-                    <td><?= htmlspecialchars($promotion['date_debut']) ?></td>
-                    <td><?= htmlspecialchars($promotion['date_fin']) ?></td>
-                    <td><?= htmlspecialchars($promotion['valeur']) ?></td>
-                    <td>
-                        <a class="btn" href="updatepromotion.php?id=<?= $promotion['id'] ?>">Modifier</a>
-                        <a class="btn-delete" href="updatepromotion.php?delete_id=<?= $promotion['id'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette promotion ?');">Supprimer</a>
-                    </td>
-                </tr>
-            <?php endif; ?>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
+
 <footer>
     <a href="admin_dashboard.php" class="btn-back">Retour</a>
-    <p>&copy; 2025 Need For Ride. Tous droits réservés.</p>
 </footer>
+<script src="theme.js"></script>
 
 </body>
 </html>
