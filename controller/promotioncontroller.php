@@ -30,8 +30,6 @@ class PromotionController {
             throw new Exception('Erreur : ' . $e->getMessage());
         }
     }
-
-    // PromotionController.php
     public function deletePromotion($code_promotion) {
         $db = config::getConnexion();
         $sqlDeletePromotion = "DELETE FROM promotions WHERE code_promotion = :code_promotion";
