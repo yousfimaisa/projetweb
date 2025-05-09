@@ -48,24 +48,25 @@ $pdf->SetTextColor(0);
 $fill = false; // alternance de couleurs
 
 while ($row = $result->fetch_assoc()) {
+    // Gestion de l'alignement des cellules avec MultiCell pour Description
     $y = $pdf->GetY();
     $startX = $pdf->GetX();
-
+    
     $pdf->SetFillColor($fill ? 230 : 255); // Gris clair / Blanc
-
+    
     $pdf->Cell(15, 10, $row['id'], 1, 0, 'C', $fill);
     $pdf->Cell(40, 10, utf8_decode($row['nom_campagne']), 1, 0, 'C', $fill);
 
-    // Gestion description avec MultiCell
+    // Multicell pour la description
     $x = $pdf->GetX();
     $y = $pdf->GetY();
     $pdf->MultiCell(65, 10, utf8_decode($row['description']), 1, 'L', $fill);
-    $pdf->SetXY($x + 65, $y);
+    $pdf->SetXY($x + 65, $y); // Repositionner après le MultiCell
 
     $pdf->Cell(30, 10, utf8_decode($row['cd_promotion']), 1, 0, 'C', $fill);
     $pdf->Cell(30, 10, utf8_decode($row['statut']), 1, 1, 'C', $fill);
 
-    $fill = !$fill;
+    $fill = !$fill; // Alternance de couleur des lignes
 }
 
 $pdf->Output();
