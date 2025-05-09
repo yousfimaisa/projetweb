@@ -26,7 +26,6 @@ class CampController {
         $this->addCampagne($nom_campagne, $description, $promotion_id, $statut);
     }
 
-    // Supprimer une campagne
     public function deleteCampagne($id) {
         $sql = "DELETE FROM campagne_promotionnelle WHERE id = :id";
         $db = config::getConnexion();
