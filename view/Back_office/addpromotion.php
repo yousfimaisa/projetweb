@@ -1,19 +1,14 @@
 <?php
-// Inclure le contrôleur pour la gestion des promotions
 include '../../controller/promotioncontroller.php';
 
-// Initialiser un tableau d'erreurs
 $errors = [];
 
-// Vérifier si le formulaire est soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupérer les données du formulaire
     $code = $_POST['code'];
     $date_debut = $_POST['date_debut'];
     $date_fin = $_POST['date_fin'];
     $valeur = $_POST['valeur'];
 
-    // Validation côté serveur
     if (strlen($code) != 8) {
         $errors[] = "Le code promo doit avoir 8 caractères.";
     }
@@ -26,7 +21,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors[] = "La valeur de la promotion doit être inférieure à 100.";
     }
 
-    // Si pas d'erreurs, ajouter la promotion
     if (empty($errors)) {
         $promotionController = new PromotionController();
         $promotionController->addPromotion($code, $date_debut, $date_fin, $valeur);
@@ -41,54 +35,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Ajouter une Promotion</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Font Awesome pour icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            background: #f4f4f4;
             color: #333;
-            background-color: #f4f4f4;
         }
 
-        header {
-            background-color: #3498db;
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-        }
-
-        nav {
-            background-color: #2980b9;
-            padding: 0.5rem 0;
-        }
-
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
+        .main-content {
             display: flex;
-            justify-content: center;
         }
 
-        nav ul li {
-            margin: 0 10px;
+        .sidebar {
+            width: 250px;
+            padding: 30px 15px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2980b9;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            transition: width 0.3s ease-in-out;
+            color: white;
+            overflow-y: auto;
         }
 
-        nav ul li a {
+        .sidebar a {
+            display: block;
             color: white;
             text-decoration: none;
-            padding: 5px 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s ease-in-out;
         }
 
-        nav ul li a:hover {
-            background-color: #1c638d;
-            border-radius: 3px;
+        .sidebar a:hover {
+            background-color: #34495e;
+            transform: translateX(10px);
+        }
+
+        .sidebar a.active {
+            background-color: #1abc9c;
         }
 
         .container {
-            width: 80%;
-            margin: 30px auto;
+            margin-left: 270px;
+            flex: 1;
             padding: 30px;
             background-color: white;
             border-radius: 10px;
@@ -106,7 +107,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-top: 15px;
         }
 
-        input[type="text"], input[type="date"], input[type="number"] {
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
@@ -120,12 +123,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: white;
             padding: 12px 20px;
             border: none;
-            text-decoration: none;
             font-size: 16px;
             display: inline-block;
             border-radius: 5px;
             margin-top: 20px;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .btn:hover {
@@ -147,65 +150,108 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         footer {
-            background-color: #34495e;
+            background-color: #2980b9;
             color: white;
             text-align: center;
             padding: 1rem 0;
             margin-top: 40px;
         }
+
+        .btn-back {
+            background-color: #2980b9;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-back:hover {
+            background-color: #2c3e50;
+        }
+
+        /* Dark Theme (optionnel) */
+        .dark-theme {
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+
+        .dark-theme .container {
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+        }
+
+        .dark-theme .sidebar {
+            background-color: #1a252f;
+        }
+
+        .dark-theme .sidebar a {
+            color: #f0f0f0;
+        }
+
+        .dark-theme .sidebar a:hover {
+            color: #1abc9c;
+        }
+
+        .dark-theme input, .dark-theme label {
+            color: #f0f0f0;
+        }
+
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Need For Ride - Gestion des Promotions</h1>
-</header>
+<div class="main-content">
+    <!-- Sidebar modernisée -->
+    <aside class="sidebar">
+        <a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="paiement.php"><i class="fas fa-money-check-alt"></i> Gestion Paiement</a>
+        <a href="factures.php"><i class="fas fa-file-invoice-dollar"></i> Gestion Facture</a>
+        <a href="admin2.php" class="active"><i class="fas fa-tags"></i> Gestion Promotions</a>
+        <a href="avis.php"><i class="fas fa-comment-dots"></i> Gestion Avis</a>
+    </aside>
 
-<nav>
-    <ul>
-        <li><a href="#">Accueil</a></li>
-        <li><a href="#">Promotions</a></li>
-        <li><a href="#">Trajets</a></li>
-        <li><a href="#">Avis</a></li>
-        <li><a href="#">Paiements</a></li>
-    </ul>
-</nav>
+    <!-- Contenu principal -->
+    <div class="container">
+        <h2>Ajouter une Nouvelle Promotion</h2>
 
-<div class="container">
-    <h2>Ajouter une Nouvelle Promotion</h2>
+        <?php if (isset($success_message)): ?>
+            <div class="success-message"><?= $success_message ?></div>
+        <?php endif; ?>
 
-    <?php if (isset($success_message)): ?>
-        <div class="success-message"><?= $success_message ?></div>
-    <?php endif; ?>
+        <?php foreach ($errors as $error): ?>
+            <div class="error-message"><?= $error ?></div>
+        <?php endforeach; ?>
 
-    <?php foreach ($errors as $error): ?>
-        <div class="error-message"><?= $error ?></div>
-    <?php endforeach; ?>
+        <form method="post" id="promotionForm">
+            <label for="code">Code Promo (8 caractères):</label>
+            <input type="text" name="code" id="code" maxlength="8" required value="<?= htmlspecialchars($_POST['code'] ?? '') ?>">
 
-    <form method="post" id="promotionForm">
-        <label for="code">Code Promo (8 caractères):</label>
-        <input type="text" name="code" id="code" maxlength="8" value="<?= htmlspecialchars($code ?? '') ?>" required>
+            <label for="date_debut">Date de début:</label>
+            <input type="date" name="date_debut" id="date_debut" required value="<?= htmlspecialchars($_POST['date_debut'] ?? '') ?>">
 
-        <label for="date_debut">Date de début:</label>
-        <input type="date" name="date_debut" id="date_debut" value="<?= htmlspecialchars($date_debut ?? '') ?>" required>
+            <label for="date_fin">Date de fin:</label>
+            <input type="date" name="date_fin" id="date_fin" required value="<?= htmlspecialchars($_POST['date_fin'] ?? '') ?>">
 
-        <label for="date_fin">Date de fin:</label>
-        <input type="date" name="date_fin" id="date_fin" value="<?= htmlspecialchars($date_fin ?? '') ?>" required>
+            <label for="valeur">Valeur de la promotion (inférieure à 100):</label>
+            <input type="number" name="valeur" id="valeur" max="99" required value="<?= htmlspecialchars($_POST['valeur'] ?? '') ?>">
 
-        <label for="valeur">Valeur de la promotion (inférieure à 100):</label>
-        <input type="number" name="valeur" id="valeur" max="99" value="<?= htmlspecialchars($valeur ?? '') ?>" required>
-
-        <button type="submit" class="btn">Ajouter Promotion</button>
-        <a href="javascript:history.back()" class="btn" style="background-color:#e74c3c;">Retour</a>
-    </form>
+            <button type="submit" class="btn">Ajouter Promotion</button>
+            <a href="javascript:history.back()" class="btn">Retour</a>
+        </form>
+    </div>
 </div>
 
-<footer>
-    &copy; 2025 Need For Ride. Tous droits réservés.
-</footer>
+<!-- Bouton retour en bas -->
+<a href="http://localhost/CRUDin/index.php" class="btn-back">Retour</a>
 
+<!-- JS validation -->
 <script>
-    document.getElementById('promotionForm').addEventListener('submit', function(event) {
+    document.getElementById('promotionForm').addEventListener('submit', function (event) {
         let errors = [];
 
         let code = document.getElementById('code').value.trim();
@@ -230,6 +276,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             alert(errors.join('\n'));
         }
     });
+
+    // Thème sombre (optionnel)
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
 </script>
 
 </body>
