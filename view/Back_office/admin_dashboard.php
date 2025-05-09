@@ -8,20 +8,19 @@ include __DIR__ . '/../../includes/header.php';
         font-family: 'Poppins', Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f4f6f9;
+        background: #f2f2f2;
         color: #333;
     }
 
     header {
-        background-color: #3498db;
-        color: white;
+        background: white;
+        color: #333;
         padding: 1.5rem 0;
         text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         position: relative;
     }
 
-    /* Mini profil de l'admin */
     .admin-profile {
         position: absolute;
         top: 20px;
@@ -44,9 +43,8 @@ include __DIR__ . '/../../includes/header.php';
     }
 
     nav {
-        background-color: #2980b9;
         padding: 0.8rem 0;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     nav ul {
@@ -71,7 +69,7 @@ include __DIR__ . '/../../includes/header.php';
     }
 
     nav ul li a:hover {
-        background-color: #1c638d;
+        background-color: #2980b9;
     }
 
     .dashboard-wrapper {
@@ -79,16 +77,17 @@ include __DIR__ . '/../../includes/header.php';
     }
 
     .sidebar {
-        width: 220px;
-        background-color: #2c3e50;
+        width: 250px;
         padding: 30px 15px;
         height: 100vh;
         position: fixed;
-        top: 120px; /* header + nav height */
+        top: 0;
         left: 0;
-        bottom: 0;
+        background-color: #2980b9;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+        transition: width 0.3s ease-in-out;
+        color: white;
         overflow-y: auto;
-        box-shadow: 2px 0 8px rgba(0,0,0,0.1);
     }
 
     .sidebar a {
@@ -96,30 +95,44 @@ include __DIR__ . '/../../includes/header.php';
         color: white;
         text-decoration: none;
         margin-bottom: 20px;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: bold;
-        transition: color 0.3s;
+        padding: 12px 20px;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.3s ease-in-out;
     }
 
     .sidebar a:hover {
-        color: #1abc9c;
+        background-color: #34495e;
+        transform: translateX(10px);
+    }
+
+    .sidebar a.active {
+        background-color: #1abc9c;
+        color: white;
     }
 
     .container {
-        width: 90%;
+        width: 100%;
         max-width: 1200px;
-        margin: 30px auto;
+        margin-left: 270px; /* Adjust for sidebar */
         padding: 30px;
         background: white;
         border-radius: 12px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         animation: fadeIn 1s ease-in;
-        margin-left: 240px; /* adjust for sidebar */
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .dashboard-box h2 {
@@ -141,27 +154,31 @@ include __DIR__ . '/../../includes/header.php';
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 20px;
     }
-
+h1{
+    text-align: center;
+            color: #2980b9;
+            margin-bottom: 20px;
+}
     .dashboard-buttons a {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 25px 20px;
-        background-color: #34495e;
+        background-color: #2980b9;
         color: white;
         text-decoration: none;
         border-radius: 10px;
         font-size: 18px;
         font-weight: bold;
         transition: transform 0.3s, background-color 0.3s;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .dashboard-buttons a:hover {
         background-color: #2c3e50;
         transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
     .dashboard-buttons a i {
@@ -170,7 +187,7 @@ include __DIR__ . '/../../includes/header.php';
     }
 
     footer {
-        background-color: #34495e;
+        background-color: #2980b9;
         color: white;
         text-align: center;
         padding: 1rem 0;
@@ -178,7 +195,7 @@ include __DIR__ . '/../../includes/header.php';
     }
 
     .btn-back {
-        background-color: #34495e;
+        background-color: #2980b9;
         color: white;
         padding: 10px 20px;
         border-radius: 8px;
@@ -230,7 +247,7 @@ include __DIR__ . '/../../includes/header.php';
     }
 
     .dark-theme .dashboard-buttons a {
-        background-color: #2c3e50;
+        background-color: #2980b9;
     }
 
     .dark-theme .dashboard-buttons a:hover {
@@ -260,47 +277,20 @@ include __DIR__ . '/../../includes/header.php';
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link rel="stylesheet" href="../view/Back_office/dark-theme.css">
 <script src="../view/Back_office/theme.js"></script>
 
-<header>
-    <h1>Tableau de bord Admin - Need For Ride</h1>
-    <div class="admin-profile">
-    <img src="/CRUDin/assets/images/admin.jpg" alt="Admin" class="admin-img">
-
-
-
-        <span>Admin</span>
-    </div>
-</header>
-
-<nav>
-    <ul>
-        <li><a href="http://localhost/CRUDin/index.php"><i class="fas fa-home"></i> Accueil</a></li>
-        <li><a href="#"><i class="fas fa-car"></i> Trajets</a></li>
-        <li><a href="#"><i class="fas fa-tag"></i> Promotions</a></li>
-        <li><a href="#"><i class="fas fa-star"></i> Avis</a></li>
-        <li><a href="#"><i class="fas fa-credit-card"></i> Paiement</a></li>
-        <li><a href="#"><i class="fas fa-bullhorn"></i> Campagnes</a></li>
-        <li><button id="themeToggle" class="btn-toggle">🌓 Mode Sombre</button></li>
-    </ul>
-</nav>
-
 <div class="dashboard-wrapper">
-
     <aside class="sidebar">
-        <a href="metier_avancee.php"><i class="fas fa-chart-line"></i> Statistiques</a>
-        <a href="exporter_promos.php"><i class="fas fa-file-pdf"></i> Exporter Promotions (PDF)</a>
-     <a href="exporter_campagnes.php"><i class="fas fa-file-pdf"></i> Exporter Campagnes (PDF)</a>
-
-        <a href="mail.php"><i class="fas fa-sign-out-alt"></i> 📬 Envoyer une campagne par mail</a>
-        <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+        <a href="admin_dashboard.php" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="paiement.php"><i class="fas fa-money-check-alt"></i> Gestion Paiement</a>
+        <a href="factures.php"><i class="fas fa-file-invoice-dollar"></i> Gestion Facture</a>
+        <a href="admin2.php"><i class="fas fa-tags"></i> Gestion Promotions</a>
+        <a href="avis.php"><i class="fas fa-comment-dots"></i> Gestion Avis</a>
     </aside>
 
     <div class="container">
         <div class="dashboard-box">
-            <h2>Bienvenue dans le tableau de bord Admin</h2>
-            <p>Choisissez une option :</p>
+            <h1>Choisissez une option :</h1>
 
             <div class="dashboard-buttons">
                 <a href="addpromotion.php"><i class="fas fa-plus-circle"></i> Ajouter une Promotion</a>
@@ -312,10 +302,9 @@ include __DIR__ . '/../../includes/header.php';
             </div>
         </div>
     </div>
-
 </div>
 
-<a href="javascript:history.back()" class="btn-back">Retour</a>
+<a href="http://localhost/CRUDin/index.php" class="btn-back">Retour</a>
 
 <script>
     document.getElementById('themeToggle').addEventListener('click', function () {
@@ -324,12 +313,7 @@ include __DIR__ . '/../../includes/header.php';
         localStorage.setItem('theme', theme);
     });
 
-    // Check for saved theme in localStorage
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-theme');
     }
 </script>
-
-<footer>
-    <p>&copy; 2025 Need For Ride. Tous droits réservés.</p>
-</footer>
