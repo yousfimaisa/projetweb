@@ -38,6 +38,7 @@ $editingId = $_GET['id'] ?? null;
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<link rel="stylesheet" href="../includes/dark-theme.css">
     <meta charset="UTF-8">
     <title>Modifier une Campagne</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,15 +50,12 @@ $editingId = $_GET['id'] ?? null;
             background-color: #f4f4f4;
         }
         header {
-            background-color: #3498db;
+    
             color: white;
             padding: 1rem 0;
             text-align: center;
         }
-        nav {
-            background-color: #2980b9;
-            padding: 0.5rem 0;
-        }
+
         nav ul {
             display: flex;
             justify-content: center;
@@ -77,15 +75,9 @@ $editingId = $_GET['id'] ?? null;
             background-color: #1c638d;
             border-radius: 4px;
         }
-        .container {
-            width: 90%;
-            margin: 40px auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        h2 {
+    
+
+        h1{
             text-align: center;
             color: #2980b9;
             margin-bottom: 20px;
@@ -117,7 +109,7 @@ $editingId = $_GET['id'] ?? null;
         .btn {
             background-color: #3498db;
             color: white;
-            padding: 10px 14px;
+            padding: 3px 2px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -127,16 +119,16 @@ $editingId = $_GET['id'] ?? null;
             background-color: #2980b9;
         }
         .btn-delete {
-            background-color: #e74c3c;
+            background-color: #2980b9;
             color: white;
-            padding: 10px 14px;
+            padding: 5px 5px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
         }
         .btn-delete:hover {
-            background-color: #c0392b;
+            background-color: #2980b9;
         }
         footer {
             background-color: #34495e;
@@ -160,22 +152,88 @@ $editingId = $_GET['id'] ?? null;
         .btn-back:hover {
             background-color: #2c3e50;
         }
+
+
+        .main-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+    .sidebar {
+        width: 250px;
+        padding: 30px 15px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #2980b9;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+        transition: width 0.3s ease-in-out;
+        color: white;
+        overflow-y: auto;
+    }
+
+    .sidebar a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 20px;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.3s ease-in-out;
+    }
+
+    .sidebar a:hover {
+        background-color: #34495e;
+        transform: translateX(10px);
+    }
+
+    .sidebar a.active {
+        background-color: #1abc9c;
+        color: white;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin-left: 270px; /* Adjust for sidebar */
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-in;
+    }
+
     </style>
 </head>
 <body>
 <header>
-    <h1>Need For Ride - Modifier une Campagne</h1>
 </header>
-<nav>
-    <ul>
-        <li><a href="#">Accueil</a></li>
-        <li><a href="#">Campagnes</a></li>
-        <li><a href="#">Promotions</a></li>
-        <li><a href="#">Trajets</a></li>
-    </ul>
-</nav>
+
+
+
+
+
+
+<div class="main-content">
+    <aside class="sidebar">
+        <a href="admin_dashboard.php">Dashboard</a>
+        <a href="paiement.php">Gestion Paiement</a>
+        <a href="factures.php">Gestion Facture</a>
+        <a href="admin2.php">Gestion Promotions</a>
+        <a href="avis.php">Gestion Avis</a>
+    </aside>
+
+
+
+
+
 <div class="container">
-    <h2>Gestion des Campagnes</h2>
+    <h1>Gestion des Campagnes</h1>
     <?php if ($message): ?>
         <div class="msg"><?= $message ?></div>
     <?php endif; ?>
@@ -194,7 +252,7 @@ $editingId = $_GET['id'] ?? null;
         <?php foreach ($list as $campagne): ?>
             <?php if ($campagne['id'] == $editingId): ?>
                 <?php
-                $nom_camp_value = $_POST['nom_camp'] ?? $campagne['nom_camp'];
+                $nom_camp_value = $_POST['nom_camp'] ?? $campagne['nom_camp'] ?? '';
                 $description_value = $_POST['description'] ?? $campagne['description'];
                 $promotion_code_value = $_POST['cd_promotion'] ?? $campagne['cd_promotion'];
                 $statut_value = $_POST['statut'] ?? $campagne['statut'];
@@ -220,7 +278,7 @@ $editingId = $_GET['id'] ?? null;
                     <td><?= htmlspecialchars($campagne['cd_promotion']) ?></td>
                     <td><?= htmlspecialchars($campagne['statut']) ?></td>
                     <td>
-                        <a class="btn" href="updatecampagne.php?id=<?= $campagne['id'] ?>">Modifier</a>
+                        <a class="btn" href="updatecamp.php?id=<?= $campagne['id'] ?>">Modifier</a>
                         <a class="btn-delete" href="updatecamp.php?delete_id=<?= $campagne['id'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette campagne ?');">Supprimer</a>
                     </td>
                 </tr>
@@ -231,8 +289,9 @@ $editingId = $_GET['id'] ?? null;
 </div>
 <footer>
     <a href="javascript:history.back()" class="btn-back">Retour</a>
-    <p>&copy; 2025 Need For Ride. Tous droits réservés.</p>
 </footer>
+<script src="theme.js"></script>
+
 </body>
 </html>
 
