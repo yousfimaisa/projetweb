@@ -27,7 +27,7 @@ if (empty($list)) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background: #f2f2f2;
             color: #333;
         }
 
@@ -37,17 +37,6 @@ if (empty($list)) {
             padding: 1rem;
             text-align: center;
         }
-
-        .container {
-            width: 90%;
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
         h2 {
             text-align: center;
             color: #2980b9;
@@ -138,6 +127,66 @@ if (empty($list)) {
             padding: 1rem 0;
             margin-top: 40px;
         }
+
+      
+
+
+
+        .sidebar {
+        width: 250px;
+        padding: 30px 15px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #2980b9;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+        transition: width 0.3s ease-in-out;
+        color: white;
+        overflow-y: auto;
+    }
+
+    .sidebar a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 20px;
+        border-radius: 8px;
+        transition: background-color 0.3s, transform 0.3s ease-in-out;
+    }
+
+    .sidebar a:hover {
+        background-color: #34495e;
+        transform: translateX(10px);
+    }
+
+    .sidebar a.active {
+        background-color: #1abc9c;
+        color: white;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin-left: 270px; /* Adjust for sidebar */
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-in;
+    }
+
+
+.main-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 30px;
+        }
+
     </style>
 </head>
 <body>
@@ -146,6 +195,14 @@ if (empty($list)) {
     <h2>Liste des Campagnes Promotionnelles</h2>
 </header>
 
+<div class="main-content">
+    <aside class="sidebar">
+        <a href="admin_dashboard.php">Dashboard</a>
+        <a href="paiement.php">Gestion Paiement</a>
+        <a href="factures.php">Gestion Facture</a>
+        <a href="admin2.php">Gestion Promotions</a>
+        <a href="avis.php">Gestion Avis</a>
+    </aside>
 <div class="container">
 
     <?php if (!empty($successMessage)) : ?>
@@ -179,10 +236,6 @@ if (empty($list)) {
     <a href="admin_dashboard.php" class="btn" style="background-color:#e74c3c;">Retour</a>
 
 </div>
-
-<footer>
-    <p>&copy; 2025 Votre Entreprise. Tous droits réservés.</p>
-</footer>
 
 </body>
 </html>
